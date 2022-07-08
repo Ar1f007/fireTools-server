@@ -2,7 +2,7 @@
 
 ## This is the server side of the project [FireTools](https://firetools-971b5.web.app/)
 
-### Task description about the project can be found [here](https://github.com/Ar1f007/fireTools-client/blob/main/Task_Description.md)
+### Task description about the project can be found [here](https://github.com/Ar1f007/fireTools-client/blob/main/TaskDescription.md#task-description)
 
 ## What's included?
 
