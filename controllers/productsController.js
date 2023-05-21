@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { client } = require('../config/connectDB');
-const productCollection = client.db('fireTools').collection('products');
+const productCollection = client.db(process.env.DB_NAME).collection('products');
 
 exports.getProducts = async (req, res) => {
   const products = await productCollection.find().sort({ createdAt: -1 }).limit(6).toArray();

@@ -1,5 +1,5 @@
 const { client } = require('../config/connectDB');
-const userCollection = client.db('fireTools').collection('users');
+const userCollection = client.db(process.env.DB_NAME).collection('users');
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 

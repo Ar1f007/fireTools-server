@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { client } = require('../config/connectDB');
-const ordersCollection = client.db('fireTools').collection('orders');
+const ordersCollection = client.db(process.env.DB_NAME).collection('orders');
 const stripe = require('stripe')(process.env.STRIPE_SK);
 
 exports.bookOrder = async (req, res) => {
