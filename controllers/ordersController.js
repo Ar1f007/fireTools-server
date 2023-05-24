@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { client } = require('../config/connectDB');
 const ordersCollection = client.db(process.env.DB_NAME).collection('orders');
+const productsCollection = client.db(process.env.DB_NAME).collection('products');
 const stripe = require('stripe')(process.env.STRIPE_SK);
 
 exports.bookOrder = async (req, res) => {
@@ -103,4 +104,46 @@ exports.updateOrderStatus = async (req, res) => {
   });
 
   res.send(order);
+};
+
+exports.getTopOrderedProducts = async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $group: {
+          _id: '$productId',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 6,
+      },
+    ];
+
+    const topProducts = await ordersCollection.aggregate(pipeline).toArray();
+
+    const productIds = topProducts.map((product) => ObjectId(product._id));
+
+    const productDetails = await productsCollection.find({ _id: { $in: productIds } }).toArray();
+
+    const mergedProducts = topProducts
+      .map((product) => {
+        const productDetail = productDetails.find(
+          (detail) => detail._id.toString() === product._id.toString()
+        );
+
+        return productDetail;
+      })
+      .filter((productDetail) => productDetail);
+
+    return res.status(200).send(mergedProducts);
+  } catch (error) {
+    console.error('Error getting top ordered products:', error);
+    return res
+      .status(500)
+      .send({ message: 'An error occurred while fetching top ordered products.' });
+  }
 };

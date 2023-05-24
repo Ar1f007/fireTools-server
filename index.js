@@ -26,6 +26,7 @@ const {
   changeOrderStatus,
   generateClientSecret,
   updateOrderStatus,
+  getTopOrderedProducts,
 } = require('./controllers/ordersController');
 
 const cors = require('cors');
@@ -52,6 +53,8 @@ async function run() {
     app.listen(PORT, () => console.log('Listening on port:', PORT));
 
     app.get('/products', getProducts);
+    app.get('/orders/top-ordered-products', getTopOrderedProducts);
+
     app.post('/products', verifyToken, verifyAdmin, addProduct);
     app.get('/products/details/:id', verifyToken, getSingleProduct);
     app.put('/products/:id', verifyToken, updateAvailableQuantity);
