@@ -15,6 +15,7 @@ exports.addReview = async (req, res) => {
     testimonial,
     ratings,
     email: req.user.email,
+    createdAt: new Date().getTime(),
   });
 
   res.status(201).send(response);
