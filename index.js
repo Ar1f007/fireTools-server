@@ -8,6 +8,8 @@ const {
   reUpdateAvailableQuantity,
   addProduct,
   deleteProduct,
+  updateProduct,
+  getAllProducts,
 } = require('./controllers/productsController');
 const {
   createUser,
@@ -32,7 +34,13 @@ const {
 const cors = require('cors');
 const express = require('express');
 const verifyToken = require('./middleware/verifyToken');
-const { addReview, getLatestReviews } = require('./controllers/reviewsController');
+const {
+  addReview,
+  getLatestReviews,
+  getMyReviews,
+  getAllReviews,
+  deleteReview,
+} = require('./controllers/reviewsController');
 const { verifyAdmin } = require('./middleware/verifyAdmin');
 
 const app = express();
@@ -53,10 +61,12 @@ async function run() {
     app.listen(PORT, () => console.log('Listening on port:', PORT));
 
     app.get('/products', getProducts);
+    app.get('/all-products', getAllProducts);
     app.get('/orders/top-ordered-products', getTopOrderedProducts);
 
     app.post('/products', verifyToken, verifyAdmin, addProduct);
     app.get('/products/details/:id', verifyToken, getSingleProduct);
+    app.put('/products/details/:id', verifyToken, updateProduct);
     app.put('/products/:id', verifyToken, updateAvailableQuantity);
     app.put('/products/update-available-quantity/:id', verifyToken, reUpdateAvailableQuantity);
     app.delete('/products/:prodId', verifyToken, verifyAdmin, deleteProduct);
@@ -78,6 +88,9 @@ async function run() {
 
     app.post('/reviews', verifyToken, addReview);
     app.get('/reviews', getLatestReviews);
+    app.get('/reviews/:email', verifyToken, getMyReviews);
+    app.get('/all-reviews', getAllReviews);
+    app.delete('/reviews/:id', deleteReview);
 
     app.get('/admin/:email', verifyToken, isAdmin);
   } finally {

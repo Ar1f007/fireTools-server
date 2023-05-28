@@ -7,6 +7,11 @@ exports.getProducts = async (req, res) => {
   res.send(products);
 };
 
+exports.getAllProducts = async (req, res) => {
+  const products = await productCollection.find().sort({ createdAt: -1 }).toArray();
+  res.send(products);
+};
+
 exports.getSingleProduct = async (req, res) => {
   const { id } = req.params;
   if (!ObjectId.isValid(id)) {
@@ -19,7 +24,8 @@ exports.getSingleProduct = async (req, res) => {
 };
 
 exports.addProduct = async (req, res) => {
-  const { name, description, price, available_quantity, min_order_quantity, image } = req.body;
+  const { name, description, price, available_quantity, min_order_quantity, image, discount } =
+    req.body;
 
   if (!name || !description || !price || !available_quantity || !image || !min_order_quantity) {
     return res.status(400).send({ message: 'Fill up all the fields please' });
@@ -32,6 +38,7 @@ exports.addProduct = async (req, res) => {
     available_quantity,
     min_order_quantity,
     image,
+    discount,
     createdAt: new Date().getTime(),
   });
 
@@ -66,6 +73,29 @@ exports.reUpdateAvailableQuantity = async (req, res) => {
   );
 
   res.status(200).send(response);
+};
+
+exports.updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, description, price, available_quantity, min_order_quantity, image, discount } =
+    req.body;
+
+  if (!name || !description || !price || !available_quantity || !image || !min_order_quantity) {
+    return res.status(400).send({ message: 'Fill up all the fields please' });
+  }
+
+  const exists = await productCollection.findOne({ _id: ObjectId(id) });
+
+  if (!exists) {
+    return res.status(404).send({ message: 'Product not found' });
+  }
+
+  await productCollection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: { name, description, price, available_quantity, min_order_quantity, image, discount } }
+  );
+
+  return res.status(200).send('Product updated successfully');
 };
 
 exports.deleteProduct = async (req, res) => {
