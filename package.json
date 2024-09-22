@@ -1,13 +1,13 @@
 {
-  "name": "express-typescript-boilerplate",
-  "version": "1.0.14",
-  "description": "An Express boilerplate backend",
-  "author": "Edwin Hernandez",
-  "repository": "edwinhern/express-typescript-2024",
+  "name": "firetools-api",
+  "version": "0.0.1",
+  "description": "RESTful API for Firetools",
+  "author": "Ariful Hoque Al Amin",
   "license": "MIT",
   "main": "index.ts",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm", 
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
     "build": "tsup",
     "start": "node dist/index.js",
